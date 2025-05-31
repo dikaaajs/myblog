@@ -1,48 +1,50 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { blogPosts } from "@/lib/blog-data"
-import { categories } from "@/lib/categories"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { blogPosts } from "@/lib/blog-data";
+import { categories } from "@/lib/categories";
 
 function getRandomPosts(count: number) {
-  const shuffled = [...blogPosts].sort(() => 0.5 - Math.random())
-  return shuffled.slice(0, count)
+  const shuffled = [...blogPosts].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
 }
 
 function getCategoryName(slug: string) {
-  const category = categories.find((cat) => cat.slug === slug)
-  return category?.name || slug
+  const category = categories.find((cat) => cat.slug === slug);
+  return category?.name || slug;
 }
 
 export function BlogSlideshow() {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [slides, setSlides] = useState(getRandomPosts(3))
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [slides, setSlides] = useState(getRandomPosts(3));
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
+  };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length)
-  }
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + slides.length) % slides.length
+    );
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      nextSlide()
-    }, 5000)
+      nextSlide();
+    }, 5000);
 
-    return () => clearInterval(interval)
-  }, [currentIndex])
+    return () => clearInterval(interval);
+  }, [currentIndex]);
 
   return (
     <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-xl mb-12 group">
       {slides.map((post, index) => {
-        const isActive = index === currentIndex
+        const isActive = index === currentIndex;
 
         return (
           <div
@@ -54,10 +56,7 @@ export function BlogSlideshow() {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10" />
 
             <Image
-              src={
-                (post.content.find((item) => item.variant === "img")?.content as string) ||
-                "/placeholder.svg?height=500&width=1000"
-              }
+              src={post.banner || "/placeholder.svg?height=500&width=1000"}
               alt={post.title}
               fill
               className="object-cover"
@@ -77,18 +76,25 @@ export function BlogSlideshow() {
                 ))}
               </div>
 
-              <h2 className="text-2xl md:text-4xl font-bold mb-2 text-white">{post.title}</h2>
+              <h2 className="text-2xl md:text-4xl font-bold mb-2 text-white">
+                {post.title}
+              </h2>
 
-              <p className="text-sm md:text-base text-gray-200 mb-4 max-w-2xl line-clamp-2">{post.excerpt}</p>
+              <p className="text-sm md:text-base text-gray-200 mb-4 max-w-2xl line-clamp-2">
+                {post.excerpt}
+              </p>
 
               <Link href={`/blog/${post.slug}`}>
-                <Button variant="default" className="bg-yellow-500 hover:bg-yellow-600 text-background">
+                <Button
+                  variant="default"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-background"
+                >
                   Read Article
                 </Button>
               </Link>
             </div>
           </div>
-        )
+        );
       })}
 
       <Button
@@ -113,11 +119,13 @@ export function BlogSlideshow() {
         {slides.map((_, index) => (
           <button
             key={index}
-            className={`w-2 h-2 rounded-full ${index === currentIndex ? "bg-yellow-400" : "bg-white/50"}`}
+            className={`w-2 h-2 rounded-full ${
+              index === currentIndex ? "bg-yellow-400" : "bg-white/50"
+            }`}
             onClick={() => setCurrentIndex(index)}
           />
         ))}
       </div>
     </div>
-  )
+  );
 }

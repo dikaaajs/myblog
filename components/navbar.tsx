@@ -1,38 +1,55 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { blogPosts } from "@/lib/blog-data"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
+import { useState } from "react";
+import Link from "next/link";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { blogPosts } from "@/lib/blog-data";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function Navbar() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [showResults, setShowResults] = useState(false)
-  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  const router = useRouter();
 
   const filteredPosts = blogPosts
-    .filter((post) => post.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    .slice(0, 5)
+    .filter((post) =>
+      post.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .slice(0, 5);
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (filteredPosts.length > 0) {
-      router.push(`/blog/${filteredPosts[0].slug}`)
-      setSearchQuery("")
-      setShowResults(false)
+      router.push(`/blog/${filteredPosts[0].slug}`);
+      setSearchQuery("");
+      setShowResults(false);
     }
-  }
+  };
 
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-16 items-center justify-between gap-2">
         <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt="Blog Logo" width={120} height={40} className="h-8 w-auto" priority />
+          <Image
+            src="/logo.png"
+            alt="Blog Logo"
+            width={120}
+            height={40}
+            className="h-8 w-auto hidden sm:block"
+            priority
+          />
+          <Image
+            src="/logo-sm.png"
+            alt="Blog Logo Small"
+            width={40}
+            height={40}
+            className="h-8 w-auto sm:hidden"
+            priority
+          />
         </Link>
 
         <div className="relative w-full max-w-sm ml-auto">
@@ -43,8 +60,8 @@ export function Navbar() {
               className="pl-8 bg-background border-muted-foreground/20"
               value={searchQuery}
               onChange={(e) => {
-                setSearchQuery(e.target.value)
-                setShowResults(e.target.value.length > 0)
+                setSearchQuery(e.target.value);
+                setShowResults(e.target.value.length > 0);
               }}
               onBlur={() => setTimeout(() => setShowResults(false), 200)}
               onFocus={() => setShowResults(searchQuery.length > 0)}
@@ -60,20 +77,22 @@ export function Navbar() {
                     href={`/blog/${post.slug}`}
                     className="block px-4 py-2 hover:bg-accent text-sm"
                     onClick={() => {
-                      setSearchQuery("")
-                      setShowResults(false)
+                      setSearchQuery("");
+                      setShowResults(false);
                     }}
                   >
                     {post.title}
                   </Link>
                 ))
               ) : (
-                <div className="px-4 py-2 text-sm text-muted-foreground">No results found</div>
+                <div className="px-4 py-2 text-sm text-muted-foreground">
+                  No results found
+                </div>
               )}
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
