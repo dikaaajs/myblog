@@ -84,9 +84,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="decoration-transparent"
+              className="decoration-transparent flex items-center gap-2"
             >
-              <ShoppingBasket />
+              {href?.startsWith("https://amzn.to") && <ShoppingBasket />}
               {content}
             </a>
           </Button>
